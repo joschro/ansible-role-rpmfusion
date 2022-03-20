@@ -1,2 +1,17 @@
 ---
 # tasks file for ansible-role-rpmfusion
+- name: Install RPMfusion repositories
+  command: dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+  args:
+    creates: /etc/yum.repos.d/rpmfusion-free.repo
+    removes: /etc/fedora-release
+
+- name: Install AppStream metadata
+  command: dnf groupupdate core -y
+
+- name: Install tainted repositories
+  package:
+    name:
+      - rpmfusion-free-release-tainted
+      - rpmfusion-nonfree-release-tainted
+    state: present
