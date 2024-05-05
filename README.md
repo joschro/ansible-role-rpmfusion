@@ -28,11 +28,13 @@ Create a file called ```ansible-playbook-rpmfusion.yml``` with following content
   gather_facts: no
   tasks:
     - name: Make sure that an empty requirements.yml file exists
+      delegate_to: 127.0.0.1
       file:
         path: requirements.yml
         state: touch
 
     - name: Create requirements.yml
+      delegate_to: 127.0.0.1
       blockinfile:
         path: requirements.yml
         create: yes
@@ -51,7 +53,7 @@ Create a file called ```ansible-playbook-rpmfusion.yml``` with following content
         state: present
 
     - name: Source required roles
-      command: ansible-galaxy install -r requirements.yml
+      local_action: command ansible-galaxy install -r requirements.yml
       # (add parameter --force to update role on succeeding runs of playbook)
 
     - name: Execute role
